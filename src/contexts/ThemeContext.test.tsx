@@ -58,4 +58,24 @@ describe('ThemeContext', () => {
     
     expect(screen.getByTestId('current-theme').textContent).toBe('light');
   });
+
+  test('throws error when useTheme is used outside of ThemeProvider', () => {
+    // Spy on console.error to suppress the expected error in test output
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    
+    // Define a component that uses useTheme without a provider
+    const InvalidComponent = () => {
+      // This should throw an error
+      useTheme();
+      return null;
+    };
+
+    // Expect the render to throw an error
+    expect(() => {
+      render(<InvalidComponent />);
+    }).toThrow('useTheme must be used within a ThemeProvider');
+    
+    // Restore console.error
+    (console.error as jest.Mock).mockRestore();
+  });
 });
